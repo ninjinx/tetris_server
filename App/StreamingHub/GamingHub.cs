@@ -14,9 +14,9 @@ public class GamingHub : StreamingHubBase<IGamingHub, IGamingHubReceiver>, IGami
     Player self;
     IInMemoryStorage<Player> storage;
 
-    public async ValueTask<Player[]> JoinAsync(string roomName, string userName, Vector3 position, Quaternion rotation)
+    public async ValueTask<Player[]> JoinAsync(string roomName, string userName)
     {
-        self = new Player() { Name = userName, Position = position, Rotation = rotation };
+        self = new Player() { Name = userName };
 
         // Group can bundle many connections and it has inmemory-storage so add any type per group.
         (room, storage) = await Group.AddAsync(roomName, self);
@@ -33,12 +33,9 @@ public class GamingHub : StreamingHubBase<IGamingHub, IGamingHubReceiver>, IGami
         Broadcast(room).OnLeave(self);
     }
 
-    public async ValueTask MoveAsync(Vector3 position, Quaternion rotation)
+    public async ValueTask OjamaAsync()
     {
-        self.Position = position;
-        self.Rotation = rotation;
-        Console.WriteLine($"MoveAsync: {self.Name} pos:{position.x} {position.y} {position.z} rot:{rotation.x} {rotation.y} {rotation.z} {rotation.w}");
-        Broadcast(room).OnMove(self);
+        Broadcast(room).OnOjama(self);
     }
 
     // You can hook OnConnecting/OnDisconnected by override.
